@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0,user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Chat | ChatApp</title>
+  <link href="/css/styles.css" rel="stylesheet">
+  <link href="/css/libs/emojionearea.css" rel="stylesheet">
+
+  <link rel="shortcut icon" type="image/x-icon" href="/icon/favicon.ico">
+</head>
+
+
+<body>
+
+  <div class="app-title">
+    <h1>SANTOSH KUMAR</h1>
+    <h2>VERMA
+      <img src="images/online.png" />
+    </h2>
+
+    <figure class="avatar">
+      <img src="images/san.jpg" />
+    </figure>
+
+  </div>
+  <!-- </div> -->
+
+  <div class="chat">
+
+
+    <div class="chat__sidebar">
+      <h3 id="chat__roomname">People</h3>
+      <div id="users"></div>
+    </div>
+
+    <div class="chat__main">
+      <ol id="messages" class="chat__messages"></ol>
+      <div id="feedback"></div>
+
+      <div class="chat__footer">
+        <form id="message-form">
+          <input id="input__message" type="text" name="message" autocomplete="off" placeholder="Enter Message"
+            value="" />
+          <button onclick="submitMessage(event,$('.emojionearea-editor')[0].innerHTML);">Send</button>
+        </form>
+         <!-- <button id="send-location">Send Location</button>  -->
+      </div>
+    </div>
+  </div>
+  <script id="message-template" type="text/template">
+    <li class="message talk-bubble tri-right round left-top">
+      <div class="message__title">
+        <h4>{{from}}</h4>
+        <span>{{time}}</span>
+      </div>
+      <div class="message__body">
+        <p>{{{text}}}</p>
+      </div>
+    </li>
+  </script>
+
+  <script id="self-message-template" type="text/template">
+    <li class="self__message talk-bubble tri-right round right-top">
+      <div class="self__message__title">
+        <span>{{time}}</span>
+        <h4>{{from}}</h4>
+      </div>
+      <div class="self__message__body">
+        <p>{{{text}}}</p>
+      </div>
+    </li>
+  </script>
+
+  <script id="location-message-template" type="text/template">
+    <li class="message talk-bubble tri-right round left-top">
+      <div class="message__title">
+        <h4>{{from}}</h4>
+        <span>{{time}}</span>
+      </div>
+      <div class="message__body">
+        <p>
+          <a href="{{url}}" target="_blank">My current location</a>
+        </p>
+      </div>
+    </li>
+  </script>
+
+  <script id="self-location-message-template" type="text/template">
+    <li class="self__message talk-bubble tri-right round right-top">
+      <div class="self__message__title">
+        <span>{{time}}</span>
+        <h4>{{from}}</h4>
+      </div>
+      <div class="self__message__body">
+        <p>
+          <a href="{{url}}" target="_blank">Check out my location</a>
+        </p>
+      </div>
+    </li>
+  </script>
+
+  <script src="/js/libs/jquery-3.3.1.min.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/js/libs/moment.js"></script>
+  <script src="/js/libs/mustache.js"></script>
+  <script src="/js/libs/deparam.js"></script>
+  <script src="/js/chat.js"></script>
+  <script src="/js/libs/emojionearea.js"></script>
+  <script>
+    $(document).ready(function () {
+      $("#input__message").emojioneArea({
+        pickerPosition: "top",
+        emojiPlaceholder: ":smile_cat:",
+        filtersPosition: "bottom",
+        filters: {
+          flags: false,
+          travel_places: false
+        },
+        events: {
+          keyup: function (editor, event) {
+            var html = editor[0].innerHTML;
+            if (event.keyCode == 13) {
+              submitMessage(event, html);
+            } else {
+              socket.emit("typing", {
+                html
+              });
+            }
+          }
+        }
+      });
+    });
+
+    function submitMessage(e, text) {
+      e.preventDefault();
+      socket.emit("createMessage", {
+        text: text
+      });
+      feedback.html("");
+      $('.emojionearea-editor')[0].innerHTML = "";
+    }
+  </script>
+</body>
+
+</html>
