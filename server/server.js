@@ -64,7 +64,7 @@ io.on('connection', socket => {
         'Santosh',
         `Hi ${
           params.name
-        }, Welcome to the ChatApp. Enjoy your time here <img alt="😁" class="emojioneemoji" src="https://cdn.jsdelivr.net/emojione/assets/3.1/png/32/1f601.png">`
+        }, Welcome !!! to our whatsapp. Enjoy your time here <img alt="😁" class="emojioneemoji" src="https://cdn.jsdelivr.net/emojione/assets/3.1/png/32/1f601.png">`
       )
     )
 
